@@ -1,0 +1,30 @@
+%% An anonymized adaptation pattern; not the product's internal architecture.
+flowchart TD
+    Product[("Product requirements<br/>authoritative source")]
+    Work["Work-item hierarchy<br/>decisions and scope"]
+    BD["Reorganized design<br/>shared intent and boundaries"]
+    UI["Interface alignment"]
+    Contract[("Shared interface contract<br/>agreed and stabilized")]
+    Backend["Backend implementation"]
+    Frontend["Frontend implementation<br/>mock-backed early work"]
+    Verify["Contract verification in CI<br/>checks authoritative definitions"]
+    Review["Multi-model review<br/>project-specific risk lenses"]
+    Integrate["Integration"]
+    Omit["Not adopted in this case<br/>optional observation and some default checks"]
+
+    Product --> Work --> BD
+    BD --> UI
+    BD --> Contract
+    UI --> Frontend
+    Contract --> Backend
+    Contract --> Frontend
+    Contract --> Verify
+    Frontend --> Verify
+    Backend -.->|"changes trigger checks"| Verify
+    Backend --> Review
+    Frontend --> Review
+    Verify --> Review --> Integrate
+    Omit -.- Integrate
+
+    classDef omitted fill:#f3f4f6,stroke:#999,stroke-dasharray:4 3,color:#555
+    class Omit omitted

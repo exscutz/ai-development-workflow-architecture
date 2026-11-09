@@ -1,0 +1,28 @@
+%% Logical authority and responsibilities; not a mandatory execution sequence.
+flowchart TD
+    Human["Human / organization<br/>decisions and external approval"]
+    Product[("Product requirements<br/>product-owned authority")]
+    Issues[("Issue hierarchy and<br/>decision records")]
+    SoT["Product SoT layer<br/>optional reference and audit"]
+    Bridge["Bridge contract<br/>Spec-to-work-item linkage"]
+    SAO["SAO<br/>specification and execution workflow"]
+    Spec[("Implementation specifications")]
+    Artifacts[("Code and tests")]
+    APO["APO — optional<br/>read-only observation and metrics"]
+
+    Human -->|"defines product intent"| Product
+    Human -->|"records decisions"| Issues
+    Product -.->|"referenced"| SoT
+    Issues -.->|"read-only audit"| SoT
+    Issues -.->|"linked by"| Bridge
+    Bridge -.->|"linkage metadata"| Spec
+    Product -.->|"requirements context"| SAO
+    SoT -.->|"optional context"| SAO
+    SAO -->|"produces"| Spec
+    Spec -->|"guides implementation"| Artifacts
+    SAO -->|"delegates and verifies"| Artifacts
+    SAO -.->|"observation events"| APO
+    Human -.->|"external merge authority"| Artifacts
+
+    classDef optional fill:#f3f4f6,stroke:#777,stroke-dasharray:4 3,color:#333
+    class SoT,APO optional

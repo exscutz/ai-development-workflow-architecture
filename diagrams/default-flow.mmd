@@ -1,0 +1,29 @@
+%% A conceptual standard path; approval-state records do not form workflow gates.
+flowchart TD
+    Req["Requirements<br/>testable acceptance criteria"]
+    Design["Design<br/>technical options and conflicts"]
+    Tasks["Task planning<br/>traceability"]
+    Impl["Implementation<br/>delegated agent"]
+    Verify{"Verification<br/>GO / NO-GO / INCOMPLETE"}
+    R1["Reviewer A"]
+    R2["Reviewer B"]
+    Union["Union of findings<br/>deduplicate; retain unique issues"]
+    Human["Human judgment<br/>conflicts and findings"]
+    Integration["Integration<br/>external CI and merge authority"]
+    Records[("Approval state<br/>recorded, not a gate")]
+
+    Req --> Design --> Tasks --> Impl --> Verify
+    Verify -->|"GO"| R1
+    Verify -->|"GO"| R2
+    Verify -->|"NO-GO: fix"| Impl
+    Verify -->|"INCOMPLETE: bounded recheck"| Verify
+    R1 --> Union
+    R2 --> Union
+    Union --> Human --> Integration
+    Design -.->|"unresolved conflict"| Human
+    Req -.-> Records
+    Design -.-> Records
+    Tasks -.-> Records
+
+    classDef record fill:#f3f4f6,stroke:#777,stroke-dasharray:4 3,color:#333
+    class Records record
