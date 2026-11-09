@@ -8,7 +8,7 @@ This document describes the **logical architecture** of the default SAO distribu
 | --- | --- | --- | --- |
 | **Product requirements** | Define what the product means and the intended scope | Owned by the adopting project, not by SAO | Documented design |
 | **Issue hierarchy and decision records** | Track work and the provenance of decisions | The issue tracker owns its own records | In operational use in the adaptation |
-| **Product SoT layer** | Optionally reference, reverse-lookup, and audit upstream information | Read-only with respect to product authority; does not own product meaning | Implemented in default; adapted version has diverged |
+| **Product SoT layer** | Optionally reference, reverse-lookup, and audit upstream information; provide human-directed helpers for recording work items and decisions | Audit is read-only; does not own product meaning or approval | Implemented in default; adapted version has diverged |
 | **Bridge contract** | Link implementation specifications to upstream work items | Defines references; does not execute workflows | Documented contract |
 | **SAO** | Create implementation specifications, delegate implementation, verify changes, coordinate review and integration | Owns the execution workflow and its specification artifacts, not product meaning | Implemented |
 | **APO observation** | Capture development events and derive metrics | Append-only observation, no approval or execution authority | Implemented as optional capability; live adoption unverified |
@@ -22,7 +22,7 @@ flowchart TD
     Human["Human / organization<br/>decisions and external approval"]
     Product[("Product requirements<br/>product-owned authority")]
     Issues[("Issue hierarchy and<br/>decision records")]
-    SoT["Product SoT layer<br/>optional reference and audit"]
+    SoT["Product SoT layer — optional<br/>read-only audit and<br/>human-directed recording helpers"]
     Bridge["Bridge contract<br/>Spec-to-work-item linkage"]
     SAO["SAO<br/>specification and execution workflow"]
     Spec[("Implementation specifications")]
@@ -33,13 +33,14 @@ flowchart TD
     Human -->|"records decisions"| Issues
     Product -.->|"referenced"| SoT
     Issues -.->|"read-only audit"| SoT
+    SoT -.->|"recording helpers, human-directed"| Issues
     Issues -.->|"linked by"| Bridge
     Bridge -.->|"linkage metadata"| Spec
-    Product -.->|"requirements context"| SAO
     SoT -.->|"optional context"| SAO
     SAO -->|"produces"| Spec
     Spec -->|"guides implementation"| Artifacts
     SAO -->|"delegates and verifies"| Artifacts
+    SAO -.->|"transitional write-back"| Issues
     SAO -.->|"observation events"| APO
     Human -.->|"external merge authority"| Artifacts
 
@@ -49,7 +50,7 @@ flowchart TD
 
 [Diagram source](../diagrams/architecture.mmd)
 
-The important relationship is **reference, not transfer of authority**. Product meaning is not overwritten as a by-product of implementing a specification. Decisions and work items remain traceable, while implementation specifications direct coding and verification. The optional SoT layer reads and audits upstream material; the Bridge provides linkage semantics rather than an autonomous service.
+The important relationship is **reference, not transfer of authority**. Product meaning is not overwritten as a by-product of implementing a specification. Decisions and work items remain traceable, while implementation specifications direct coding and verification. The optional SoT layer audits upstream material read-only and separately offers human-directed helpers for recording work items and decisions. A write-back of decisions from SAO to the work items still exists during migration and is shown as transitional. The Bridge provides linkage semantics rather than an autonomous service.
 
 The interface contract is another distinct authority in an adopting project. Its particular format is not intrinsic to SAO.
 

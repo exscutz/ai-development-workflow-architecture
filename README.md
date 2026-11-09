@@ -12,7 +12,7 @@ flowchart TD
     Human["Human / organization<br/>decisions and external approval"]
     Product[("Product requirements<br/>product-owned authority")]
     Issues[("Issue hierarchy and<br/>decision records")]
-    SoT["Product SoT layer<br/>optional reference and audit"]
+    SoT["Product SoT layer — optional<br/>read-only audit and<br/>human-directed recording helpers"]
     Bridge["Bridge contract<br/>Spec-to-work-item linkage"]
     SAO["SAO<br/>specification and execution workflow"]
     Spec[("Implementation specifications")]
@@ -23,13 +23,14 @@ flowchart TD
     Human -->|"records decisions"| Issues
     Product -.->|"referenced"| SoT
     Issues -.->|"read-only audit"| SoT
+    SoT -.->|"recording helpers, human-directed"| Issues
     Issues -.->|"linked by"| Bridge
     Bridge -.->|"linkage metadata"| Spec
-    Product -.->|"requirements context"| SAO
     SoT -.->|"optional context"| SAO
     SAO -->|"produces"| Spec
     Spec -->|"guides implementation"| Artifacts
     SAO -->|"delegates and verifies"| Artifacts
+    SAO -.->|"transitional write-back"| Issues
     SAO -.->|"observation events"| APO
     Human -.->|"external merge authority"| Artifacts
 
@@ -37,7 +38,7 @@ flowchart TD
     class SoT,APO optional
 ```
 
-The diagram separates **authority**, **execution**, and **observation**. Product meaning is owned by the adopting project; the workflow uses that context to produce implementation specifications, delegate implementation, and verify results. A Bridge defines linkage rather than executing work. The optional observation layer records engineering events without deciding what to do.
+The diagram separates **authority**, **execution**, and **observation**. Product meaning is owned by the adopting project; the workflow receives context through linked work items to produce implementation specifications, delegate implementation, and verify results. A Bridge defines linkage rather than executing work. The optional observation layer records engineering events without deciding what to do.
 
 ## Two views of the workflow
 
@@ -51,7 +52,7 @@ The adaptation is an **example**, not a recommended universal development proces
 ## Design principles
 
 - **Authority is explicit.** Product requirements, decision history, implementation specifications, shared interface contracts, and code each have different owners.
-- **Record, don't enforce approval state.** Approval records are evidence, not a workflow-invented permission system. Technical verification failures and external repository permissions remain separate concerns.
+- **Record, don't enforce approval state.** Approval fields are observed and recorded as-is; they neither gate the workflow nor prove that a human approved, because a field does not say who set it. Technical verification failures and external repository permissions remain separate concerns.
 - **Delegate and verify.** A coordinating AI session delegates implementation and independent reviews, then consolidates evidence for human decisions.
 - **Adopt selectively.** Optional capabilities and project-specific integrations should not be mistaken for universally active features.
 

@@ -6,7 +6,7 @@ This case documents **workflow adaptation**, not a product architecture, busines
 
 The default workflow begins with an implementation specification. In the observed adaptation, product requirements and a tracked work hierarchy form the upstream authority; implementation specifications are derived downstream for scoped work.
 
-Development stages were reorganized around **design, a stable shared contract, and independent frontend/backend execution**. The shared interface becomes a clear integration boundary, and CI-backed checks read authoritative contract definitions rather than relying solely on a textual comparison at final integration.
+Development stages were reorganized so that **frontend and backend design start independently from shared product meaning** and converge twice: a semantic alignment that creates no technical contract, and a later contract agreement based on the backend's draft. The shared interface becomes a clear integration boundary, and CI-backed checks read authoritative contract definitions rather than relying solely on a textual comparison at final integration.
 
 ## Adaptation overview
 
@@ -15,20 +15,24 @@ Development stages were reorganized around **design, a stable shared contract, a
 flowchart TD
     Product[("Product requirements<br/>authoritative source")]
     Work["Work-item hierarchy<br/>decisions and scope"]
-    BD["Reorganized design<br/>shared intent and boundaries"]
-    UI["Interface alignment"]
-    Contract[("Shared interface contract<br/>agreed and stabilized")]
+    Semantic["Semantic alignment<br/>shared product meaning; no contract"]
+    BEDesign["Backend design<br/>includes contract draft"]
+    FEDesign["Frontend design"]
+    UI["UI structure agreement"]
+    Contract[("Shared interface contract<br/>agreed from backend draft")]
     Backend["Backend implementation"]
     Frontend["Frontend implementation<br/>mock-backed early work"]
     Verify["Contract verification in CI<br/>checks authoritative definitions"]
     Review["Multi-model review<br/>project-specific risk lenses"]
     Integrate["Integration"]
-    Omit["Not adopted in this case<br/>optional observation and some default checks"]
+    Omit["Legend — not adopted in this case<br/>optional observation and some default checks"]
 
-    Product --> Work --> BD
-    BD --> UI
-    BD --> Contract
-    UI --> Frontend
+    Product --> Work --> Semantic
+    Semantic --> BEDesign
+    Semantic --> FEDesign
+    FEDesign --> UI --> Frontend
+    BEDesign -->|"contract draft"| Contract
+    FEDesign -->|"mutual agreement"| Contract
     Contract --> Backend
     Contract --> Frontend
     Contract --> Verify
@@ -37,7 +41,6 @@ flowchart TD
     Backend --> Review
     Frontend --> Review
     Verify --> Review --> Integrate
-    Omit -.- Integrate
 
     classDef omitted fill:#f3f4f6,stroke:#999,stroke-dasharray:4 3,color:#555
     class Omit omitted
@@ -45,7 +48,7 @@ flowchart TD
 
 [Diagram source](../diagrams/adaptation-flow.mmd)
 
-This is a **conceptual overlay of the changed responsibilities**. Arrows do not imply that all processing is sequential. Frontend implementation need not wait for the backend to be complete. Agreement on the interface and a stabilized shared contract are coordination points, not claims that every project needs the same gates.
+This is a **conceptual overlay of the changed responsibilities**. Arrows do not imply that all processing is sequential. Frontend design and implementation need not wait for backend design or implementation to be complete. Semantic alignment, UI structure agreement and contract agreement are coordination points, not claims that every project needs the same gates. The "not adopted" node is a legend, not a step in the flow.
 
 ## Differences from the default
 
@@ -53,9 +56,10 @@ This is a **conceptual overlay of the changed responsibilities**. Arrows do not 
 | --- | --- | --- | --- |
 | Requirements authority | Implementation-spec-first; optional upstream context | Product-owned requirements and tracked work items precede derived specs | **Replaced** |
 | Development stages | General requirements, design, tasks and implementation | Reorganized design and delivery responsibilities | **Reorganized** |
-| Frontend/backend coordination | General flow with optional frontend extensions | Independent execution around shared interface and design agreements | **Reorganized** |
+| Frontend/backend coordination | General flow with optional frontend extensions | Independent design and implementation from shared product meaning; convergence at semantic alignment and at contract agreement | **Reorganized** |
 | Interface verification | AI-assisted requirement/contract alignment | CI checks directly compare consumer-facing definitions with the authoritative shared contract | **Extended** |
-| Engineering guidance | Scoped contextual instructions | Project-selected design authority is recorded and reused in later stages | **Extended** |
+| Engineering guidance | Scoped contextual instructions | Applicable architecture decisions are selected once at design time, recorded, and reused by later stages | **Extended** |
+| Decision records | Approval fields observed and recorded | Each decision additionally records whether it originated from a human or an AI | **Extended** |
 | Review | Independent model reviews | Extra risk-sensitive review perspectives for selected changes | **Extended** |
 | Optional observation | Available separately | Not adopted | **Omitted** |
 | Default verifier CI template | Available for adoption | Not enabled; only a subset of custom checks is active in CI | **Omitted** |

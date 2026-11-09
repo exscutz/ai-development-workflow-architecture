@@ -3,7 +3,7 @@ flowchart TD
     Human["Human / organization<br/>decisions and external approval"]
     Product[("Product requirements<br/>product-owned authority")]
     Issues[("Issue hierarchy and<br/>decision records")]
-    SoT["Product SoT layer<br/>optional reference and audit"]
+    SoT["Product SoT layer — optional<br/>read-only audit and<br/>human-directed recording helpers"]
     Bridge["Bridge contract<br/>Spec-to-work-item linkage"]
     SAO["SAO<br/>specification and execution workflow"]
     Spec[("Implementation specifications")]
@@ -14,13 +14,14 @@ flowchart TD
     Human -->|"records decisions"| Issues
     Product -.->|"referenced"| SoT
     Issues -.->|"read-only audit"| SoT
+    SoT -.->|"recording helpers, human-directed"| Issues
     Issues -.->|"linked by"| Bridge
     Bridge -.->|"linkage metadata"| Spec
-    Product -.->|"requirements context"| SAO
     SoT -.->|"optional context"| SAO
     SAO -->|"produces"| Spec
     Spec -->|"guides implementation"| Artifacts
     SAO -->|"delegates and verifies"| Artifacts
+    SAO -.->|"transitional write-back"| Issues
     SAO -.->|"observation events"| APO
     Human -.->|"external merge authority"| Artifacts
 

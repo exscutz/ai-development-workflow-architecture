@@ -4,11 +4,11 @@ These are **original, generalized explanations** of decisions reflected in the i
 
 ## 1. Record approval state; do not create new approval authority
 
-**Problem.** A workflow that reads an approval flag and then decides whether it may proceed can confuse AI-readable evidence with actual authorization.
+**Problem.** A workflow that reads an approval flag and then decides whether it may proceed can confuse a recorded flag with actual authorization.
 
 **Alternatives.** Strengthen internal gates; manage exceptions; or record approval status while keeping true authority external.
 
-**Decision.** Treat approval as recorded evidence rather than a mandatory internal transition. Retain technical verification and external authorization checks as separate concerns. Record whether a decision came from a human or an AI when that distinction matters.
+**Decision.** Observe and record approval fields without treating them as a mandatory internal transition or as proof of human approval. Retain technical verification and external authorization checks as separate concerns. *(Adaptation only)* The adopting project additionally records whether each decision originated from a human or an AI; this is not part of the default distribution.
 
 **Trade-off.** The workflow avoids conflating its own flags with human permission, but depends on accurate records, audits and actual human governance. This policy is expressed partly through agent instructions, not guaranteed by a deterministic enforcement mechanism. Some legacy gate wording remains under migration.
 
